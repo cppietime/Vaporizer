@@ -12,7 +12,7 @@ import glob
 
 class VapeArgs(argparse.ArgumentParser):
 	'''The CLI args for vaporization'''
-	def __init__(self, args = sys.argv):
+	def __init__(self, args = sys.argv[1:]):
 		super().__init__(description = 'Vaporize media')
 		self.add_argument('--width', '-w', type=int, default=720, help='Width of image')
 		self.add_argument('--height', '-v', type=int, default=480, help='Height of image')
@@ -68,7 +68,7 @@ class VapeArgs(argparse.ArgumentParser):
 		# self.static = 64
 		# self.framerate = 30
 		# self.looplen = 300
-		self.args = self.parse_args(args[1:])
+		self.args = self.parse_args(args)
 	
 	def __getattr__(self, name):
 		return getattr(self.args, name)
@@ -181,9 +181,12 @@ def save_frames(base, template, args):
 		frame = static(off_frame(base, i, args))
 		frame.save(template % i)
 
-def make_vid(args = None):
+def make_vid(*args, **kwargs):
 	'''Make the video with a given base image and sound file'''
-	if args is None: args = VapeArgs()
+	pars = [item for sublist in map(lambda i: ('--'+i[0], i[1]), kwargs.items()) for item in sublist] + list(args)
+	print(pars)
+	
+	args = VapeArgs(args = pars)
 	frames = os.path.join(args.frame_path, 'frame%03d.png')
 	for frame in glob.glob(os.path.join(args.frame_path, 'frame*.png')):
 		try:
