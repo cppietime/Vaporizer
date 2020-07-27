@@ -13,5 +13,7 @@ Alternatively, run the following Python code:
 ```python
 import vaporizer
 
-vaporizer.make_vids('music.wav', 'background.png', 'vaporwave.mp4')
+vaporizer.make_vid('music.wav', 'background.png', 'vaporwave.mp4')
 ```
+
+Using the `make_vid` function requires having `ffmpeg`. Use `-p` or `--ffmpeg=` to specify the path to the ffmpeg executable.
